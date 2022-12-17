@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">MyNewsApp</string>
+    <string name="topHeadline">Top Headlines</string>
+    <string name="newsSources">News Sources</string>
+    <string name="countries">Countries</string>
+    <string name="languages">Languages</string>
+    <string name="search">Search</string>
+    <string name="oops">Oops,</string>
+    <string name="somethingWentWrong">Something went wrong. Let\'s try again</string>
+    <string name="tryAgain">Try Again</string>
+
+
+</resources>
