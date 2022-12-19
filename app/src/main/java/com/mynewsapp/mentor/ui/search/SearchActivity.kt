@@ -3,6 +3,7 @@ package com.mynewsapp.mentor.ui.search
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.SearchView.GONE
 import android.widget.SearchView.OnQueryTextListener
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -18,13 +19,13 @@ import com.mynewsapp.mentor.di.module.ActivityModule
 import com.mynewsapp.mentor.ui.topHeadlines.TopHeadlinesAdapter
 import com.mynewsapp.mentor.utils.Resource
 import com.mynewsapp.mentor.utils.Status
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 class SearchActivity : AppCompatActivity() {
 
-    private lateinit var binding:ActivitySearchBinding
+    private lateinit var binding: ActivitySearchBinding
 
     @Inject
     lateinit var adapter: TopHeadlinesAdapter
@@ -39,47 +40,6 @@ class SearchActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupUI()
-        setupObserver()
-
-    }
-
-    private fun setupObserver() {
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-
-                searchViewModel.searchList.collect{
-
-                    when (it.status) {
-
-                        Status.SUCCESS -> {
-
-                            binding.progressBar.visibility = View.GONE
-                            binding.recyclerView.visibility = View.VISIBLE
-
-                            it.data?.let {
-                                renderList(it)
-                            }
-                        }
-
-                        Status.LOADING -> {
-                            binding.progressBar.visibility = View.VISIBLE
-                            binding.recyclerView.visibility = View.GONE
-                        }
-                        Status.ERROR -> {
-                            binding.progressBar.visibility = View.GONE
-
-                            Toast.makeText(this@SearchActivity, it.message, Toast.LENGTH_LONG)
-                                .show()
-                        }
-
-
-                    }
-
-                }
-
-            }
-        }
 
     }
 
@@ -90,30 +50,50 @@ class SearchActivity : AppCompatActivity() {
 
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     private fun setupUI() {
 
         binding.recyclerView.adapter = adapter
 
-        binding.  searchView.setOnQueryTextListener(object :OnQueryTextListener,
+        lifecycleScope.launch{
+            binding.searchView.getQueryTextChangeStateFlow()
+                .debounce(200)
+                .filter {
 
-            SearchView.OnQueryTextListener {
+                    val validQuery = it.isNotEmpty()
 
-            override fun onQueryTextChange(newText: String): Boolean {
+                    if (!validQuery){
+                        binding.progressBar.visibility= View.GONE
+                        renderList(emptyList())
+                        binding.recyclerView.visibility=View.VISIBLE
+                    }
+                    else{
+                        binding.progressBar.visibility=View.VISIBLE
 
+                    }
 
+                    return@filter validQuery
 
-                return false
-            }
-
-            override fun onQueryTextSubmit(query: String): Boolean {
-
-                return false
-            }
-
-        })
+                }
+                .distinctUntilChanged()
+                .flowOn(Dispatchers.Default)
+                .flatMapLatest {
+                    return@flatMapLatest searchViewModel.fetchResult(it)
+                        .catch {
+                            emitAll(flowOf(emptyList()))
+                        }
+                }
+                .collect{
+                    binding.progressBar.visibility= GONE
+                    renderList(it)
+                    binding.recyclerView.visibility=View.VISIBLE
+                }
+        }
 
 
     }
+
+
 
     private fun injectDependencies() {
 
@@ -122,6 +102,25 @@ class SearchActivity : AppCompatActivity() {
             .activityModule(ActivityModule(this))
             .build()
             .inject(this)
+
+    }
+
+    private fun SearchView.getQueryTextChangeStateFlow(): StateFlow<String> {
+
+        val query = MutableStateFlow("")
+
+        setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                query.value = newText
+                return true
+            }
+        })
+
+        return query
 
     }
 }

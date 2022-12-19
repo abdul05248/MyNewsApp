@@ -5,7 +5,10 @@ import com.mynewsapp.mentor.data.model.languages.Language
 
 object AppConstant {
 
-    const val COUNTRY = "us"
+    const val LANGUAGE = "LANGUAGE"
+    const val COUNTRY = "COUNTRY"
+
+    const val COUNTRY_US = "us"
 
     val LANGUAGES = arrayListOf(
 
@@ -24,5 +27,7 @@ object AppConstant {
         Country("ca", "Canada"),
 
     )
+
+    const val API_KEY = "7502ab9197514f9792f796df2b3c35d7"
 
 }

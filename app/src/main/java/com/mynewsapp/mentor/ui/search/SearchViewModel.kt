@@ -14,22 +14,7 @@ class SearchViewModel(private val searchRepository: SearchRepository) : ViewMode
 
     val searchList: StateFlow<Resource<List<Article>>> = _searchList
 
-    init {
-        fetchResult()
-    }
-
-    private fun fetchResult() {
-
-        viewModelScope.launch {
-            searchRepository.getSearchResult("s")
-                .catch {
-                    _searchList.value = Resource.error(it.message)
-                }
-                .collect {
-                    _searchList.value = Resource.success(it)
-                }
-        }
-
-    }
+    //Ask$ why this
+     fun fetchResult(string: String)  = searchRepository.getSearchResult(string)
 
 }

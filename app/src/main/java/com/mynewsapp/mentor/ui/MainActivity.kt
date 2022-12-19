@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding.tvNewsSources.setOnClickListener(this)
         binding.tvCountries.setOnClickListener(this)
         binding.tvLanguages.setOnClickListener(this)
+        binding.tvSearch.setOnClickListener(this)
 
     }
 

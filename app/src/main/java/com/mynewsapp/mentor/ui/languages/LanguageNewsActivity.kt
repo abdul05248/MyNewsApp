@@ -1,4 +1,4 @@
-package com.mynewsapp.mentor.ui.topHeadlines
+package com.mynewsapp.mentor.ui.languages
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,31 +9,30 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mynewsapp.mentor.MyApplication
 import com.mynewsapp.mentor.data.model.topHeadines.Article
-import com.mynewsapp.mentor.databinding.ActivityTopHeadlinesBinding
-import com.mynewsapp.mentor.di.component.ActivityComponent
+import com.mynewsapp.mentor.databinding.ActivityLanguageNewsBinding
 import com.mynewsapp.mentor.di.component.DaggerActivityComponent
 import com.mynewsapp.mentor.di.module.ActivityModule
-import com.mynewsapp.mentor.ui.MainActivity
+import com.mynewsapp.mentor.ui.topHeadlines.TopHeadlinesAdapter
+import com.mynewsapp.mentor.utils.AppConstant
 import com.mynewsapp.mentor.utils.Status
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class TopHeadlinesActivity : AppCompatActivity() {
+class LanguageNewsActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityTopHeadlinesBinding
-
-    @Inject
-    lateinit var topHeadlinesViewModel: TopHeadlinesViewModel
+    lateinit var binding:ActivityLanguageNewsBinding
 
     @Inject
     lateinit var adapter: TopHeadlinesAdapter
 
+    @Inject
+    lateinit var languageNewsViewModel: LanguageNewsViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         injectDependencies()
         super.onCreate(savedInstanceState)
-        binding = ActivityTopHeadlinesBinding.inflate(layoutInflater)
+        binding = ActivityLanguageNewsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         setupUI()
         setupObserver()
 
@@ -42,6 +41,13 @@ class TopHeadlinesActivity : AppCompatActivity() {
     private fun setupUI() {
 
         binding.recyclerView.adapter = adapter
+
+        intent.getStringExtra(AppConstant.LANGUAGE)?.let {
+            languageNewsViewModel.fetchNewsWithLanguage(it)
+        }
+        intent.getStringExtra(AppConstant.COUNTRY)?.let {
+            languageNewsViewModel.fetchNewsWithCountry(it)
+        }
     }
 
     private fun setupObserver() {
@@ -50,7 +56,7 @@ class TopHeadlinesActivity : AppCompatActivity() {
 
             repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                topHeadlinesViewModel.articleList.collect { it ->
+                languageNewsViewModel.articleList.collect { it ->
 
                     when (it.status) {
 
@@ -71,7 +77,7 @@ class TopHeadlinesActivity : AppCompatActivity() {
                         Status.ERROR -> {
                             binding.progressBar.visibility = View.GONE
 
-                            Toast.makeText(this@TopHeadlinesActivity, it.message, Toast.LENGTH_LONG)
+                            Toast.makeText(this@LanguageNewsActivity, it.message, Toast.LENGTH_LONG)
                                 .show()
                         }
 
@@ -91,7 +97,6 @@ class TopHeadlinesActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
 
     }
-
 
     private fun injectDependencies() {
 

@@ -4,6 +4,7 @@ import com.mynewsapp.mentor.di.ActivityScope
 import com.mynewsapp.mentor.di.module.ActivityModule
 import com.mynewsapp.mentor.ui.countries.CountryActivity
 import com.mynewsapp.mentor.ui.languages.LanguageActivity
+import com.mynewsapp.mentor.ui.languages.LanguageNewsActivity
 import com.mynewsapp.mentor.ui.search.SearchActivity
 import com.mynewsapp.mentor.ui.sources.NewsSourceActivity
 import com.mynewsapp.mentor.ui.topHeadlines.TopHeadlinesActivity
@@ -22,5 +23,7 @@ interface ActivityComponent {
     fun inject(activity: LanguageActivity)
 
     fun inject(activity: SearchActivity)
+
+    fun inject(activity: LanguageNewsActivity)
 
 }

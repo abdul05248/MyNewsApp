@@ -3,6 +3,9 @@ package com.mynewsapp.mentor.data.repository
 import com.mynewsapp.mentor.data.model.topHeadines.Article
 import com.mynewsapp.mentor.di.ActivityScope
 import com.mynewsapp.mentor.di.api.NetworkService
+import com.mynewsapp.mentor.utils.AppConstant.COUNTRIES
+import com.mynewsapp.mentor.utils.AppConstant.COUNTRY
+import com.mynewsapp.mentor.utils.AppConstant.COUNTRY_US
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -13,7 +16,7 @@ class TopHeadlinesRepository constructor(private val networkService: NetworkServ
 
     fun getTopHeadlines(): Flow<List<Article>> {
 
-        return flow { emit(networkService.getTopHeadlines()) }
+        return flow { emit(networkService.getTopHeadlines(COUNTRY_US)) }
             .map { it.articles }
     }
 

@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.mynewsapp.mentor.data.model.countries.Country
 import com.mynewsapp.mentor.databinding.SourceItemLayoutBinding
+import com.mynewsapp.mentor.ui.languages.LanguageNewsActivity
 import com.mynewsapp.mentor.ui.sources.NewsSourceActivity
+import com.mynewsapp.mentor.utils.AppConstant
 
 
 class CountryAdapter(private val countryList: ArrayList<Country>) :
@@ -22,7 +24,8 @@ class CountryAdapter(private val countryList: ArrayList<Country>) :
 
                 binding.tvItem.setOnClickListener{
 
-                    it.context.startActivity(Intent(it.context, NewsSourceActivity::class.java))
+                    it.context.startActivity(Intent(it.context, LanguageNewsActivity::class.java)
+                        .putExtra(AppConstant.COUNTRY, country.id))
                 }
 
             }

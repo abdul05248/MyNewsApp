@@ -3,8 +3,11 @@ package com.mynewsapp.mentor.utils
 import android.content.Context
 import android.net.Uri
 import android.widget.ImageView
+import android.widget.SearchView
 import androidx.browser.customtabs.CustomTabsIntent
 import com.bumptech.glide.Glide
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class Utils {
 
@@ -16,10 +19,12 @@ class Utils {
             customTabsIntent.launchUrl(context, Uri.parse(url))
         }
 
-        fun loadImage(context: Context,imageView: ImageView, url: String){
+        fun loadImage(context: Context,imageView: ImageView, url: String?){
+
             Glide.with(context)
                 .load(url)
                 .into(imageView)
+
         }
 
     }

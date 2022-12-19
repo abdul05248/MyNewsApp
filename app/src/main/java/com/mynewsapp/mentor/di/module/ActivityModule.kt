@@ -3,18 +3,16 @@ package com.mynewsapp.mentor.di.module
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.mynewsapp.mentor.data.repository.CountryRepository
-import com.mynewsapp.mentor.data.repository.LanguageRepository
-import com.mynewsapp.mentor.data.repository.NewsSourceRepository
-import com.mynewsapp.mentor.data.repository.TopHeadlinesRepository
+import com.mynewsapp.mentor.data.repository.*
 import com.mynewsapp.mentor.di.ActivityContext
-import com.mynewsapp.mentor.di.ActivityScope
 import com.mynewsapp.mentor.di.api.NetworkService
 import com.mynewsapp.mentor.ui.base.ViewModelProviderFactory
 import com.mynewsapp.mentor.ui.countries.CountryAdapter
 import com.mynewsapp.mentor.ui.countries.CountryViewModel
 import com.mynewsapp.mentor.ui.languages.LanguageAdapter
+import com.mynewsapp.mentor.ui.languages.LanguageNewsViewModel
 import com.mynewsapp.mentor.ui.languages.LanguageViewModel
+import com.mynewsapp.mentor.ui.search.SearchViewModel
 import com.mynewsapp.mentor.ui.sources.NewsSourceAdapter
 import com.mynewsapp.mentor.ui.sources.NewsSourceViewModel
 import com.mynewsapp.mentor.ui.topHeadlines.TopHeadlinesAdapter
@@ -69,6 +67,20 @@ class ActivityModule(private val activity: AppCompatActivity) {
     }
 
     @Provides
+    fun provideSearchViewModel(searchRepository: SearchRepository):SearchViewModel{
+        return ViewModelProvider(activity, ViewModelProviderFactory(SearchViewModel::class){
+            SearchViewModel(searchRepository)
+        })[SearchViewModel::class.java]
+    }
+
+    @Provides
+    fun provideLanguageNewsViewModel(languageNewsRepository: LanguageNewsRepository):LanguageNewsViewModel{
+        return ViewModelProvider(activity, ViewModelProviderFactory(LanguageNewsViewModel::class){
+            LanguageNewsViewModel(languageNewsRepository)
+        })[LanguageNewsViewModel::class.java]
+    }
+
+    @Provides
     fun provideTopHeadlinesAdapter() =TopHeadlinesAdapter(ArrayList())
 
     @Provides
@@ -91,4 +103,10 @@ class ActivityModule(private val activity: AppCompatActivity) {
 
     @Provides
     fun getNewsSourceRepository(networkService: NetworkService)= NewsSourceRepository(networkService)
+
+    @Provides
+    fun getSearchRepository(networkService: NetworkService)= SearchRepository(networkService)
+
+    @Provides
+    fun getLanguageNewsRepository(networkService: NetworkService)= LanguageNewsRepository(networkService)
 }
