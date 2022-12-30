@@ -8,6 +8,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mynewsapp.mentor.MyApplication
+import com.mynewsapp.mentor.data.local.entities.TopHeadlines
 import com.mynewsapp.mentor.data.model.topHeadines.Article
 import com.mynewsapp.mentor.databinding.ActivityTopHeadlinesBinding
 import com.mynewsapp.mentor.di.component.ActivityComponent
@@ -85,7 +86,7 @@ class TopHeadlinesActivity : AppCompatActivity() {
 
     }
 
-    private fun renderList(articleList: List<Article>) {
+    private fun renderList(articleList: List<TopHeadlines>) {
 
         adapter.addData(articleList)
         adapter.notifyDataSetChanged()

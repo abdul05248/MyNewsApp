@@ -2,6 +2,7 @@ package com.mynewsapp.mentor.ui.search
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.SearchView.GONE
 import android.widget.SearchView.OnQueryTextListener
@@ -16,6 +17,7 @@ import com.mynewsapp.mentor.data.model.topHeadines.Article
 import com.mynewsapp.mentor.databinding.ActivitySearchBinding
 import com.mynewsapp.mentor.di.component.DaggerActivityComponent
 import com.mynewsapp.mentor.di.module.ActivityModule
+import com.mynewsapp.mentor.ui.languages.LanguageNewsAdapter
 import com.mynewsapp.mentor.ui.topHeadlines.TopHeadlinesAdapter
 import com.mynewsapp.mentor.utils.Resource
 import com.mynewsapp.mentor.utils.Status
@@ -28,7 +30,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
 
     @Inject
-    lateinit var adapter: TopHeadlinesAdapter
+    lateinit var adapter: LanguageNewsAdapter
 
     @Inject
     lateinit var searchViewModel: SearchViewModel
@@ -55,44 +57,44 @@ class SearchActivity : AppCompatActivity() {
 
         binding.recyclerView.adapter = adapter
 
-        lifecycleScope.launch{
+        lifecycleScope.launch() {
             binding.searchView.getQueryTextChangeStateFlow()
                 .debounce(200)
                 .filter {
 
                     val validQuery = it.isNotEmpty()
 
-                    if (!validQuery){
-                        binding.progressBar.visibility= View.GONE
+                    if (!validQuery) {
+                        binding.progressBar.visibility = View.GONE
                         renderList(emptyList())
-                        binding.recyclerView.visibility=View.VISIBLE
-                    }
-                    else{
-                        binding.progressBar.visibility=View.VISIBLE
+                        binding.recyclerView.visibility = View.VISIBLE
+                    } else {
+                        binding.progressBar.visibility = View.VISIBLE
 
                     }
 
                     return@filter validQuery
 
                 }
+                .flowOn(Dispatchers.Main)
                 .distinctUntilChanged()
-                .flowOn(Dispatchers.Default)
                 .flatMapLatest {
                     return@flatMapLatest searchViewModel.fetchResult(it)
-                        .catch {
+                        .catch { e ->
+                            Log.d("apiError", e.message.toString())
                             emitAll(flowOf(emptyList()))
                         }
                 }
-                .collect{
-                    binding.progressBar.visibility= GONE
+                .flowOn(Dispatchers.IO)
+                .collect {
+
+                    binding.progressBar.visibility = GONE
+                    binding.recyclerView.visibility = View.VISIBLE
                     renderList(it)
-                    binding.recyclerView.visibility=View.VISIBLE
+
                 }
         }
-
-
     }
-
 
 
     private fun injectDependencies() {

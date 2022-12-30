@@ -1,6 +1,7 @@
 package com.mynewsapp.mentor.di.component
 
 import com.mynewsapp.mentor.di.ActivityScope
+import com.mynewsapp.mentor.di.api.NetworkHelper
 import com.mynewsapp.mentor.di.module.ActivityModule
 import com.mynewsapp.mentor.ui.countries.CountryActivity
 import com.mynewsapp.mentor.ui.languages.LanguageActivity

@@ -23,7 +23,7 @@ class LanguageNewsActivity : AppCompatActivity() {
     lateinit var binding:ActivityLanguageNewsBinding
 
     @Inject
-    lateinit var adapter: TopHeadlinesAdapter
+    lateinit var adapter: LanguageNewsAdapter
 
     @Inject
     lateinit var languageNewsViewModel: LanguageNewsViewModel

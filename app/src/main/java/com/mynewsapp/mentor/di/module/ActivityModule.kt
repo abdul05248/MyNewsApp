@@ -3,13 +3,18 @@ package com.mynewsapp.mentor.di.module
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.mynewsapp.mentor.data.local.database.AppDatabase
+import com.mynewsapp.mentor.data.local.database.DatabaseHelperImpl
 import com.mynewsapp.mentor.data.repository.*
 import com.mynewsapp.mentor.di.ActivityContext
+import com.mynewsapp.mentor.di.ApplicationContext
+import com.mynewsapp.mentor.di.api.NetworkHelper
 import com.mynewsapp.mentor.di.api.NetworkService
 import com.mynewsapp.mentor.ui.base.ViewModelProviderFactory
 import com.mynewsapp.mentor.ui.countries.CountryAdapter
 import com.mynewsapp.mentor.ui.countries.CountryViewModel
 import com.mynewsapp.mentor.ui.languages.LanguageAdapter
+import com.mynewsapp.mentor.ui.languages.LanguageNewsAdapter
 import com.mynewsapp.mentor.ui.languages.LanguageNewsViewModel
 import com.mynewsapp.mentor.ui.languages.LanguageViewModel
 import com.mynewsapp.mentor.ui.search.SearchViewModel
@@ -30,9 +35,10 @@ class ActivityModule(private val activity: AppCompatActivity) {
     }
 
     @Provides
-    fun provideNewsListViewModel(topHeadlineRepository: TopHeadlinesRepository): TopHeadlinesViewModel {
+    fun provideNewsListViewModel(topHeadlineRepository: TopHeadlinesRepository, networkHelper: NetworkHelper):
+            TopHeadlinesViewModel {
         return ViewModelProvider(activity, ViewModelProviderFactory(TopHeadlinesViewModel::class) {
-            TopHeadlinesViewModel(topHeadlineRepository)
+            TopHeadlinesViewModel(topHeadlineRepository, networkHelper)
         })[TopHeadlinesViewModel::class.java]
     }
 
@@ -93,13 +99,16 @@ class ActivityModule(private val activity: AppCompatActivity) {
     fun provideLanguageAdapter() = LanguageAdapter(ArrayList())
 
     @Provides
+    fun provideLanguageNewssAdapter() = LanguageNewsAdapter(ArrayList())
+
+    @Provides
     fun provideCountryRepository() = CountryRepository()
 
     @Provides
     fun provideLanguageRepository() = LanguageRepository()
 
     @Provides
-    fun provideTopHeadlinesRepository(networkService: NetworkService) = TopHeadlinesRepository(networkService)
+    fun provideTopHeadlinesRepository(networkService: NetworkService, databaseHelperImpl: DatabaseHelperImpl) = TopHeadlinesRepository(networkService, databaseHelperImpl)
 
     @Provides
     fun getNewsSourceRepository(networkService: NetworkService)= NewsSourceRepository(networkService)
@@ -109,4 +118,6 @@ class ActivityModule(private val activity: AppCompatActivity) {
 
     @Provides
     fun getLanguageNewsRepository(networkService: NetworkService)= LanguageNewsRepository(networkService)
+
+    //Ask$ yhan get se h and application me provide se h ?
 }

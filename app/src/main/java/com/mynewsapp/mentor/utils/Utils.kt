@@ -19,13 +19,7 @@ class Utils {
             customTabsIntent.launchUrl(context, Uri.parse(url))
         }
 
-        fun loadImage(context: Context,imageView: ImageView, url: String?){
 
-            Glide.with(context)
-                .load(url)
-                .into(imageView)
-
-        }
 
     }
 
