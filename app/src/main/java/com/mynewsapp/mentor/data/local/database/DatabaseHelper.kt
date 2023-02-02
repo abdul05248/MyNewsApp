@@ -5,10 +5,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface DatabaseHelper {
 
-fun getTopHeadlines():Flow<List<TopHeadlines>>
+    fun getTopHeadlines(): Flow<List<TopHeadlines>>
 
-fun deleteAll():Int
+    fun deleteAll(): Int
 
-fun insertAll( data: List<TopHeadlines>):Flow<Unit>
+    fun insertAll(data: List<TopHeadlines>): Flow<Unit>
+
 
 }

@@ -14,19 +14,16 @@ import com.mynewsapp.mentor.data.model.countries.Country
 import com.mynewsapp.mentor.databinding.ActivityCountryBinding
 import com.mynewsapp.mentor.di.component.DaggerActivityComponent
 import com.mynewsapp.mentor.di.module.ActivityModule
+import com.mynewsapp.mentor.ui.base.BaseActivity
 import com.mynewsapp.mentor.utils.Status
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class CountryActivity : AppCompatActivity() {
-
-    lateinit var binding:ActivityCountryBinding
+class CountryActivity : BaseActivity<ActivityCountryBinding, CountryViewModel>
+    (ActivityCountryBinding::inflate) {
 
     @Inject
     lateinit var adapter: CountryAdapter
-
-    @Inject
-    lateinit var countryVewModel: CountryViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         injectDependencies()
@@ -45,7 +42,7 @@ class CountryActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
 
-                countryVewModel.countryList.collect{ it ->
+                viewModel.countryList.collect{ it ->
 
                     when(it.status){
 

@@ -13,20 +13,17 @@ import com.mynewsapp.mentor.data.model.languages.Language
 import com.mynewsapp.mentor.databinding.ActivityLanguageBinding
 import com.mynewsapp.mentor.di.component.DaggerActivityComponent
 import com.mynewsapp.mentor.di.module.ActivityModule
+import com.mynewsapp.mentor.ui.base.BaseActivity
 import com.mynewsapp.mentor.utils.Status
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class LanguageActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityLanguageBinding
+class LanguageActivity : BaseActivity<ActivityLanguageBinding, LanguageViewModel>
+    (ActivityLanguageBinding::inflate) {
 
     @Inject
     lateinit var adapter: LanguageAdapter
-
-    @Inject
-    lateinit var languageViewModel: LanguageViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         injectDependencies()
@@ -45,7 +42,7 @@ class LanguageActivity : AppCompatActivity() {
 
             repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                languageViewModel.languageList.collect{
+                viewModel.languageList.collect{
 
                     when(it.status){
 

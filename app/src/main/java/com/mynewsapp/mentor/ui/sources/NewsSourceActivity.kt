@@ -12,20 +12,17 @@ import com.mynewsapp.mentor.data.model.sources.Source
 import com.mynewsapp.mentor.databinding.ActivityNewsSourceBinding
 import com.mynewsapp.mentor.di.component.DaggerActivityComponent
 import com.mynewsapp.mentor.di.module.ActivityModule
+import com.mynewsapp.mentor.ui.base.BaseActivity
 import com.mynewsapp.mentor.utils.Status
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class NewsSourceActivity : AppCompatActivity() {
-
-    lateinit var binding: ActivityNewsSourceBinding
+class NewsSourceActivity : BaseActivity<ActivityNewsSourceBinding, NewsSourceViewModel>
+    (ActivityNewsSourceBinding::inflate) {
 
     @Inject
     lateinit var adapter: NewsSourceAdapter
-
-    @Inject
-    lateinit var sourceViewModel: NewsSourceViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         injectDependencies()
@@ -41,7 +38,7 @@ class NewsSourceActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
 
-                sourceViewModel.sourceList.collect{
+                viewModel.sourceList.collect{
 
                     when(it.status){
 

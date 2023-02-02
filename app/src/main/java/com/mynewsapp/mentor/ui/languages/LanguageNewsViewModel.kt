@@ -16,7 +16,7 @@ class LanguageNewsViewModel(private val languageNewsRepository: LanguageNewsRepo
 
     private val _articleList = MutableStateFlow<Resource<List<Article>>>(Resource.loading())
 
-    val articleList:StateFlow<Resource<List<Article>>> =_articleList
+    val articleList: StateFlow<Resource<List<Article>>> = _articleList
 
     fun fetchNewsWithLanguage(language: String) {
 
@@ -26,10 +26,10 @@ class LanguageNewsViewModel(private val languageNewsRepository: LanguageNewsRepo
 
             languageNewsRepository.getNewsWithLanguage(language)
                 .catch {
-                    _articleList.value=Resource.error(this.toString())
+                    _articleList.value = Resource.error(this.toString())
                 }
-                .collect{
-                _articleList.value=Resource.success(it)
+                .collect {
+                    _articleList.value = Resource.success(it)
                 }
 
         }
@@ -43,15 +43,14 @@ class LanguageNewsViewModel(private val languageNewsRepository: LanguageNewsRepo
 
             languageNewsRepository.getNewsWithCountry(country)
                 .catch {
-                    _articleList.value=Resource.error(this.toString())
+                    _articleList.value = Resource.error(this.toString())
                 }
-                .collect{
-                _articleList.value=Resource.success(it)
+                .collect {
+                    _articleList.value = Resource.success(it)
                 }
 
         }
     }
-
 
 
 }

@@ -11,6 +11,8 @@ import com.mynewsapp.mentor.di.ApplicationContext
 import com.mynewsapp.mentor.di.api.NetworkHelper
 import com.mynewsapp.mentor.di.api.NetworkService
 import com.mynewsapp.mentor.di.module.ApplicationModule
+import com.mynewsapp.mentor.utils.DefaultDispatcher
+import com.mynewsapp.mentor.utils.DispatcherProvider
 import dagger.Component
 import javax.inject.Singleton
 
@@ -28,5 +30,7 @@ interface ApplicationComponent {
     fun getDbHelper(): DatabaseHelperImpl
 
     fun getNetworkHelper(): NetworkHelper
+
+    fun getDefaultDispatcher(): DispatcherProvider
 
 }

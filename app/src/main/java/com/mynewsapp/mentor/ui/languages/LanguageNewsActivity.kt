@@ -12,21 +12,18 @@ import com.mynewsapp.mentor.data.model.topHeadines.Article
 import com.mynewsapp.mentor.databinding.ActivityLanguageNewsBinding
 import com.mynewsapp.mentor.di.component.DaggerActivityComponent
 import com.mynewsapp.mentor.di.module.ActivityModule
+import com.mynewsapp.mentor.ui.base.BaseActivity
 import com.mynewsapp.mentor.ui.topHeadlines.TopHeadlinesAdapter
 import com.mynewsapp.mentor.utils.AppConstant
 import com.mynewsapp.mentor.utils.Status
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class LanguageNewsActivity : AppCompatActivity() {
-
-    lateinit var binding:ActivityLanguageNewsBinding
+class LanguageNewsActivity : BaseActivity<ActivityLanguageNewsBinding, LanguageNewsViewModel>
+    (ActivityLanguageNewsBinding ::inflate) {
 
     @Inject
     lateinit var adapter: LanguageNewsAdapter
-
-    @Inject
-    lateinit var languageNewsViewModel: LanguageNewsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         injectDependencies()
@@ -43,10 +40,10 @@ class LanguageNewsActivity : AppCompatActivity() {
         binding.recyclerView.adapter = adapter
 
         intent.getStringExtra(AppConstant.LANGUAGE)?.let {
-            languageNewsViewModel.fetchNewsWithLanguage(it)
+            viewModel.fetchNewsWithLanguage(it)
         }
         intent.getStringExtra(AppConstant.COUNTRY)?.let {
-            languageNewsViewModel.fetchNewsWithCountry(it)
+            viewModel.fetchNewsWithCountry(it)
         }
     }
 
@@ -56,7 +53,7 @@ class LanguageNewsActivity : AppCompatActivity() {
 
             repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                languageNewsViewModel.articleList.collect { it ->
+                viewModel.articleList.collect { it ->
 
                     when (it.status) {
 

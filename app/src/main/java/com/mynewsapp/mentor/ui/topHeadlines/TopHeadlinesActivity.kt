@@ -1,6 +1,5 @@
 package com.mynewsapp.mentor.ui.topHeadlines
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -9,22 +8,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mynewsapp.mentor.MyApplication
 import com.mynewsapp.mentor.data.local.entities.TopHeadlines
-import com.mynewsapp.mentor.data.model.topHeadines.Article
 import com.mynewsapp.mentor.databinding.ActivityTopHeadlinesBinding
-import com.mynewsapp.mentor.di.component.ActivityComponent
 import com.mynewsapp.mentor.di.component.DaggerActivityComponent
 import com.mynewsapp.mentor.di.module.ActivityModule
-import com.mynewsapp.mentor.ui.MainActivity
+import com.mynewsapp.mentor.ui.base.BaseActivity
 import com.mynewsapp.mentor.utils.Status
+import com.mynewsapp.mentor.utils.Utils
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class TopHeadlinesActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityTopHeadlinesBinding
-
-    @Inject
-    lateinit var topHeadlinesViewModel: TopHeadlinesViewModel
+///Ask$   ActivityTopHeadlinesBinding::inflate  ??syntex
+class TopHeadlinesActivity :
+    BaseActivity<ActivityTopHeadlinesBinding, TopHeadlinesViewModel>
+        (ActivityTopHeadlinesBinding::inflate) {
 
     @Inject
     lateinit var adapter: TopHeadlinesAdapter
@@ -32,8 +28,6 @@ class TopHeadlinesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         injectDependencies()
         super.onCreate(savedInstanceState)
-        binding = ActivityTopHeadlinesBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
         setupUI()
         setupObserver()
@@ -43,6 +37,16 @@ class TopHeadlinesActivity : AppCompatActivity() {
     private fun setupUI() {
 
         binding.recyclerView.adapter = adapter
+
+        adapter.itemClickListener = {
+            Utils.openCustomTabUrl(this, it.url)
+        }
+
+        adapter.javaItemClickListener = object : JavaItemClickListener {
+            override fun onClick(top: TopHeadlines) {
+                Utils.openCustomTabUrl(this@TopHeadlinesActivity, top.url)
+            }
+        }
     }
 
     private fun setupObserver() {
@@ -51,7 +55,7 @@ class TopHeadlinesActivity : AppCompatActivity() {
 
             repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                topHeadlinesViewModel.articleList.collect { it ->
+                viewModel.articleList.collect { it ->
 
                     when (it.status) {
 

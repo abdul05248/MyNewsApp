@@ -7,14 +7,16 @@ import com.mynewsapp.mentor.data.model.topHeadines.Article
 import com.mynewsapp.mentor.data.repository.TopHeadlinesRepository
 import com.mynewsapp.mentor.di.api.NetworkHelper
 import com.mynewsapp.mentor.utils.AppConstant.COUNTRY
+import com.mynewsapp.mentor.utils.DispatcherProvider
 import com.mynewsapp.mentor.utils.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-//Ask$ activity me inject hai to yha pe constructor me sab mil jaega
+
 class TopHeadlinesViewModel(private val topHeadlinesRepository: TopHeadlinesRepository,
-            private val networkHelper: NetworkHelper) :
+            private val networkHelper: NetworkHelper,
+            private val dispatcherProvider: DispatcherProvider) :
     ViewModel() {
 
     private val _articleList = MutableStateFlow<Resource<List<TopHeadlines>>>(Resource.loading())
@@ -38,10 +40,10 @@ class TopHeadlinesViewModel(private val topHeadlinesRepository: TopHeadlinesRepo
 
     private fun fetchNewsFromLocal(){
 
-        viewModelScope.launch {
+        viewModelScope.launch (dispatcherProvider.main){
 
             topHeadlinesRepository.getTopHeadlinesFromDb()
-                .flowOn(Dispatchers.IO)
+                .flowOn(dispatcherProvider.io)
                 .catch {
                     _articleList.value = Resource.error(this.toString())
                 }
@@ -54,12 +56,12 @@ class TopHeadlinesViewModel(private val topHeadlinesRepository: TopHeadlinesRepo
 
     private fun fetchNewsFromNetworkAndSaveInLocal(){
 
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(dispatcherProvider.main) {
 
             topHeadlinesRepository.getTopHeadlines()
-                .flowOn(Dispatchers.IO)
+                .flowOn(dispatcherProvider.io)
                 .catch {
-                _articleList.value= Resource.error(this.toString())
+                _articleList.value= Resource.error(it.toString())
                 }
                 .collect{
                     _articleList.value =Resource.success(it)

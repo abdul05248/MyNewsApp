@@ -2,6 +2,7 @@ package com.mynewsapp.mentor.data.repository
 
 import com.mynewsapp.mentor.data.model.languages.Language
 import com.mynewsapp.mentor.data.model.topHeadines.Article
+import com.mynewsapp.mentor.data.model.topHeadines.TopHeadlinesResponse
 import com.mynewsapp.mentor.di.api.NetworkService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -13,6 +14,13 @@ class LanguageNewsRepository constructor(private val networkService: NetworkServ
 
         return flow { emit(networkService.getNewsWithLanguageResult(language)) }
             .map { it.articles }
+
+    }
+
+    suspend fun getNewsWithLanguageWithoutFlow(language: String
+                                               ): TopHeadlinesResponse {
+
+        return networkService.getNewsWithLanguageResult(language)
     }
 
     fun getNewsWithCountry(country: String): Flow<List<Article>> {

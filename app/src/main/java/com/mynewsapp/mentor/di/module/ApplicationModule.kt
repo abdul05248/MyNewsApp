@@ -11,6 +11,8 @@ import com.mynewsapp.mentor.di.DatabaseName
 import com.mynewsapp.mentor.di.api.ApplicationInterceptor
 import com.mynewsapp.mentor.di.api.NetworkHelper
 import com.mynewsapp.mentor.di.api.NetworkService
+import com.mynewsapp.mentor.utils.DefaultDispatcher
+import com.mynewsapp.mentor.utils.DispatcherProvider
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -67,10 +69,9 @@ class ApplicationModule(private val application: MyApplication) {
     fun provideNetworkHelper(@ApplicationContext context: Context)= NetworkHelper(context)
 
     @Provides
-    fun provideDatabaseHelperImp(appDatabase: AppDatabase)= DatabaseHelperImpl(appDatabase)
+    fun provideDatabaseHelperImp(appDatabase: AppDatabase)=
+        DatabaseHelperImpl(appDatabase)
 
-    //Ask$ I don't understand
-    //Why passing value when nothing is in AppDatabase
     @Provides
     fun provideAppDatabase(@ApplicationContext context:Context,@DatabaseName name:String): AppDatabase = Room.databaseBuilder(
         context,
@@ -79,5 +80,8 @@ class ApplicationModule(private val application: MyApplication) {
     ).build()
 
 
+    @Singleton
+    @Provides
+    fun provideDefaultDispatcher():DispatcherProvider = DefaultDispatcher()
 
 }

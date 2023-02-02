@@ -17,11 +17,13 @@ import com.mynewsapp.mentor.ui.languages.LanguageAdapter
 import com.mynewsapp.mentor.ui.languages.LanguageNewsAdapter
 import com.mynewsapp.mentor.ui.languages.LanguageNewsViewModel
 import com.mynewsapp.mentor.ui.languages.LanguageViewModel
+import com.mynewsapp.mentor.ui.search.SearchPagingAdapter
 import com.mynewsapp.mentor.ui.search.SearchViewModel
 import com.mynewsapp.mentor.ui.sources.NewsSourceAdapter
 import com.mynewsapp.mentor.ui.sources.NewsSourceViewModel
 import com.mynewsapp.mentor.ui.topHeadlines.TopHeadlinesAdapter
 import com.mynewsapp.mentor.ui.topHeadlines.TopHeadlinesViewModel
+import com.mynewsapp.mentor.utils.DispatcherProvider
 import dagger.Module
 import dagger.Provides
 
@@ -35,10 +37,11 @@ class ActivityModule(private val activity: AppCompatActivity) {
     }
 
     @Provides
-    fun provideNewsListViewModel(topHeadlineRepository: TopHeadlinesRepository, networkHelper: NetworkHelper):
+    fun provideNewsListViewModel(topHeadlineRepository: TopHeadlinesRepository, networkHelper: NetworkHelper,
+    dispatcherProvider: DispatcherProvider):
             TopHeadlinesViewModel {
         return ViewModelProvider(activity, ViewModelProviderFactory(TopHeadlinesViewModel::class) {
-            TopHeadlinesViewModel(topHeadlineRepository, networkHelper)
+            TopHeadlinesViewModel(topHeadlineRepository, networkHelper, dispatcherProvider)
         })[TopHeadlinesViewModel::class.java]
     }
 
@@ -100,6 +103,9 @@ class ActivityModule(private val activity: AppCompatActivity) {
 
     @Provides
     fun provideLanguageNewssAdapter() = LanguageNewsAdapter(ArrayList())
+
+    @Provides
+    fun provideSearchPagingAdapter() = SearchPagingAdapter()
 
     @Provides
     fun provideCountryRepository() = CountryRepository()

@@ -12,15 +12,11 @@ import kotlinx.coroutines.flow.StateFlow
 class Utils {
 
     companion object{
-
         fun openCustomTabUrl(context: Context, url:String){
             val builder = CustomTabsIntent.Builder()
             val customTabsIntent = builder.build()
             customTabsIntent.launchUrl(context, Uri.parse(url))
         }
-
-
-
     }
 
 
