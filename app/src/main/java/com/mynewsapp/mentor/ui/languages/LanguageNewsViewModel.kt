@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mynewsapp.mentor.data.model.topHeadines.Article
 import com.mynewsapp.mentor.data.repository.LanguageNewsRepository
+import com.mynewsapp.mentor.ui.base.BaseViewModel
+import com.mynewsapp.mentor.ui.base.UiState
 import com.mynewsapp.mentor.utils.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,24 +14,22 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class LanguageNewsViewModel(private val languageNewsRepository: LanguageNewsRepository) :
-    ViewModel() {
+    BaseViewModel() {
 
-    private val _articleList = MutableStateFlow<Resource<List<Article>>>(Resource.loading())
+    private val _articleList = MutableStateFlow<UiState<List<Article>>>(UiState.Loading)
 
-    val articleList: StateFlow<Resource<List<Article>>> = _articleList
+    val articleList: StateFlow<UiState<List<Article>>> = _articleList
 
     fun fetchNewsWithLanguage(language: String) {
-
-        Log.v("kjsjqs", language);
 
         viewModelScope.launch {
 
             languageNewsRepository.getNewsWithLanguage(language)
                 .catch {
-                    _articleList.value = Resource.error(this.toString())
+                    _articleList.value = UiState.Error(this.toString())
                 }
                 .collect {
-                    _articleList.value = Resource.success(it)
+                    _articleList.value = UiState.Success(it)
                 }
 
         }
@@ -43,10 +43,10 @@ class LanguageNewsViewModel(private val languageNewsRepository: LanguageNewsRepo
 
             languageNewsRepository.getNewsWithCountry(country)
                 .catch {
-                    _articleList.value = Resource.error(this.toString())
+                    _articleList.value = UiState.Error(this.toString())
                 }
                 .collect {
-                    _articleList.value = Resource.success(it)
+                    _articleList.value = UiState.Success(it)
                 }
 
         }

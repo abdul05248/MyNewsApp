@@ -10,8 +10,8 @@ data class TopHeadlines(
     //Ask$ blog me @ColumnInfo nh tha
     @PrimaryKey(autoGenerate = true) val id :Int=0,
     @ColumnInfo val title:String,
-    @ColumnInfo val description : String,
+    @ColumnInfo val description : String?="",
     @ColumnInfo val sourceName : String,
-    @ColumnInfo val imageUrl : String,
-    @ColumnInfo val url : String
+    @ColumnInfo val imageUrl : String?="",
+    @ColumnInfo val url : String?=""
     )

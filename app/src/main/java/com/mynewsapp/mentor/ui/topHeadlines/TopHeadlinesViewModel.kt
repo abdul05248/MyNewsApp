@@ -3,25 +3,28 @@ package com.mynewsapp.mentor.ui.topHeadlines
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mynewsapp.mentor.data.local.entities.TopHeadlines
-import com.mynewsapp.mentor.data.model.topHeadines.Article
 import com.mynewsapp.mentor.data.repository.TopHeadlinesRepository
 import com.mynewsapp.mentor.di.api.NetworkHelper
-import com.mynewsapp.mentor.utils.AppConstant.COUNTRY
+import com.mynewsapp.mentor.ui.base.BaseViewModel
+import com.mynewsapp.mentor.ui.base.UiState
 import com.mynewsapp.mentor.utils.DispatcherProvider
-import com.mynewsapp.mentor.utils.Resource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 
-class TopHeadlinesViewModel(private val topHeadlinesRepository: TopHeadlinesRepository,
-            private val networkHelper: NetworkHelper,
-            private val dispatcherProvider: DispatcherProvider) :
-    ViewModel() {
+class TopHeadlinesViewModel(
+    private val topHeadlinesRepository: TopHeadlinesRepository,
+    private val networkHelper: NetworkHelper,
+    private val dispatcherProvider: DispatcherProvider
+) :
+    BaseViewModel() {
 
-    private val _articleList = MutableStateFlow<Resource<List<TopHeadlines>>>(Resource.loading())
+    private val _articleList = MutableStateFlow<UiState<List<TopHeadlines>>>(UiState.Loading)
 
-    val articleList:StateFlow<Resource<List<TopHeadlines>>> =_articleList
+    val articleList: StateFlow<UiState<List<TopHeadlines>>> = _articleList
 
     init {
         fetchNews()
@@ -29,42 +32,41 @@ class TopHeadlinesViewModel(private val topHeadlinesRepository: TopHeadlinesRepo
 
     private fun fetchNews() {
 
-        if (networkHelper.isNetworkConnected()){
+        if (networkHelper.isNetworkConnected()) {
             fetchNewsFromNetworkAndSaveInLocal()
-        }
-        else{
+        } else {
             fetchNewsFromLocal()
         }
 
     }
 
-    private fun fetchNewsFromLocal(){
+    private fun fetchNewsFromLocal() {
 
-        viewModelScope.launch (dispatcherProvider.main){
+        viewModelScope.launch(dispatcherProvider.main) {
 
             topHeadlinesRepository.getTopHeadlinesFromDb()
                 .flowOn(dispatcherProvider.io)
                 .catch {
-                    _articleList.value = Resource.error(this.toString())
+                    _articleList.value = UiState.Error(this.toString())
                 }
-                .collect{
-                    _articleList.value = Resource.success(it)
+                .collect {
+                    _articleList.value = UiState.Success(it)
                 }
         }
 
     }
 
-    private fun fetchNewsFromNetworkAndSaveInLocal(){
+    private fun fetchNewsFromNetworkAndSaveInLocal() {
 
         viewModelScope.launch(dispatcherProvider.main) {
 
             topHeadlinesRepository.getTopHeadlines()
                 .flowOn(dispatcherProvider.io)
                 .catch {
-                _articleList.value= Resource.error(it.toString())
+                    _articleList.value = UiState.Error(it.toString())
                 }
-                .collect{
-                    _articleList.value =Resource.success(it)
+                .collect {
+                    _articleList.value = UiState.Success(it)
                 }
 
         }

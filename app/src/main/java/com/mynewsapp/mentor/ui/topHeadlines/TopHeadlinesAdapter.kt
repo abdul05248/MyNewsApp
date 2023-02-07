@@ -26,7 +26,7 @@ class TopHeadlinesAdapter(private val articleList: ArrayList<TopHeadlines>) :
             binding.textViewDescription.text = article.description
             binding.textViewSource.text = article.sourceName
 
-            binding.imageViewBanner.loadImage(article.imageUrl)
+            article.imageUrl?.let { binding.imageViewBanner.loadImage(it) }
 
             itemView.setOnClickListener {
                 itemClickListener(article)

@@ -3,9 +3,10 @@ package com.mynewsapp.mentor.ui
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModel
 import com.mynewsapp.mentor.databinding.ActivityMainBinding
+import com.mynewsapp.mentor.di.component.ActivityComponent
 import com.mynewsapp.mentor.ui.base.BaseActivity
+import com.mynewsapp.mentor.ui.base.BaseViewModel
 import com.mynewsapp.mentor.ui.countries.CountryActivity
 import com.mynewsapp.mentor.ui.languages.LanguageActivity
 import com.mynewsapp.mentor.ui.search.SearchActivity
@@ -14,14 +15,27 @@ import com.mynewsapp.mentor.ui.topHeadlines.TopHeadlinesActivity
 
 //Ask$ there is no viewmodel for this activity what should I pass?
 class MainActivity : BaseActivity<ActivityMainBinding,
-        ViewModel>(ActivityMainBinding::inflate), View.OnClickListener {
+        BaseViewModel>(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         setListeners()
+
+    }
+
+    override fun injectDependencies(activityComponent: ActivityComponent) {
+
+    }
+
+    override fun getViewBinding(): ActivityMainBinding {
+        return ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    override fun setUpUi() {
+
+    }
+
+    override fun setUpObserver() {
 
     }
 

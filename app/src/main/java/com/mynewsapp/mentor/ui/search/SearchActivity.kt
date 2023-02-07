@@ -1,16 +1,13 @@
 package com.mynewsapp.mentor.ui.search
 
-import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.SearchView.GONE
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagingData
-import com.mynewsapp.mentor.MyApplication
 import com.mynewsapp.mentor.databinding.ActivitySearchBinding
-import com.mynewsapp.mentor.di.component.DaggerActivityComponent
-import com.mynewsapp.mentor.di.module.ActivityModule
+import com.mynewsapp.mentor.di.component.ActivityComponent
 import com.mynewsapp.mentor.ui.base.BaseActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,24 +16,22 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>
-    (ActivitySearchBinding::inflate) {
+class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>() {
 
     @Inject
     lateinit var adapter: SearchPagingAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        injectDependencies()
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        setupUI()
+    override fun injectDependencies(activityComponent: ActivityComponent) {
+        activityComponent.inject(this)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    private fun setupUI() {
+    override fun getViewBinding(): ActivitySearchBinding {
+        return ActivitySearchBinding.inflate(layoutInflater)
+    }
 
+
+    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
+    override fun setUpUi() {
         binding.recyclerView.adapter = adapter
 
         lifecycleScope.launch() {
@@ -63,7 +58,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>
                 .flatMapLatest {
                     return@flatMapLatest viewModel.fetchResult(it)
                         .catch { e ->
-                            Log.d("apiError", e.message.toString())
+
 //                            emitAll(flowOf(emptyList()))//Ask$ why emitAll not working?
                             adapter.submitData(lifecycle, PagingData.empty())
                             //Should I pass empty list here?
@@ -71,7 +66,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>
                 }
                 .flowOn(Dispatchers.IO)
                 .collect {
-                    Log.d("testPaging", it.toString())
+
 
                     binding.progressBar.visibility = GONE
                     binding.recyclerView.visibility = View.VISIBLE
@@ -82,16 +77,10 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>
         }
     }
 
-
-    private fun injectDependencies() {
-
-        DaggerActivityComponent.builder()
-            .applicationComponent((application as MyApplication).applicationComponent)
-            .activityModule(ActivityModule(this))
-            .build()
-            .inject(this)
+    override fun setUpObserver() {
 
     }
+
 
     private fun SearchView.getQueryTextChangeStateFlow(): StateFlow<String> {
 
