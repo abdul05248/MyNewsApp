@@ -7,7 +7,6 @@ import com.mynewsapp.mentor.data.model.topHeadines.Article
 import com.mynewsapp.mentor.data.repository.LanguageNewsRepository
 import com.mynewsapp.mentor.ui.base.BaseViewModel
 import com.mynewsapp.mentor.ui.base.UiState
-import com.mynewsapp.mentor.utils.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch

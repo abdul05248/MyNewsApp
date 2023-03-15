@@ -12,6 +12,7 @@ import com.mynewsapp.mentor.ui.base.BaseActivity
 import com.mynewsapp.mentor.ui.base.UiState
 import com.mynewsapp.mentor.utils.Utils
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class TopHeadlinesActivity :
@@ -48,6 +49,7 @@ class TopHeadlinesActivity :
     }
 
     override fun setUpObserver() {
+
 
         lifecycleScope.launch {
 

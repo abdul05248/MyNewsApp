@@ -2,6 +2,7 @@ package com.mynewsapp.mentor.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.mynewsapp.mentor.databinding.ActivityMainBinding
 import com.mynewsapp.mentor.di.component.ActivityComponent
@@ -12,6 +13,10 @@ import com.mynewsapp.mentor.ui.languages.LanguageActivity
 import com.mynewsapp.mentor.ui.search.SearchActivity
 import com.mynewsapp.mentor.ui.sources.NewsSourceActivity
 import com.mynewsapp.mentor.ui.topHeadlines.TopHeadlinesActivity
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 
 //Ask$ there is no viewmodel for this activity what should I pass?
 class MainActivity : BaseActivity<ActivityMainBinding,
@@ -19,6 +24,7 @@ class MainActivity : BaseActivity<ActivityMainBinding,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setListeners()
 
     }
@@ -46,6 +52,14 @@ class MainActivity : BaseActivity<ActivityMainBinding,
         binding.tvCountries.setOnClickListener(this)
         binding.tvLanguages.setOnClickListener(this)
         binding.tvSearch.setOnClickListener(this)
+
+
+        GlobalScope.launch {
+            (1..5).asFlow()
+                .collect {
+                    Log.d("TAG", it.toString())
+                }
+        }
 
     }
 

@@ -1,6 +1,5 @@
 package com.mynewsapp.mentor.ui.search
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.mynewsapp.mentor.data.model.topHeadines.Article

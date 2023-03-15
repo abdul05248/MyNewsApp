@@ -26,5 +26,8 @@ class MyApplication : Application() {
         applicationComponent.inject(this)
 
     }
-
+    // Needed to replace the component with a test specific one
+    fun setTestComponent(applicationComponent: ApplicationComponent){
+        this.applicationComponent = applicationComponent
+    }
 }

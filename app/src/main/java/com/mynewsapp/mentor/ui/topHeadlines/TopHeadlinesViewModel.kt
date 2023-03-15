@@ -1,6 +1,5 @@
 package com.mynewsapp.mentor.ui.topHeadlines
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mynewsapp.mentor.data.local.entities.TopHeadlines
 import com.mynewsapp.mentor.data.repository.TopHeadlinesRepository

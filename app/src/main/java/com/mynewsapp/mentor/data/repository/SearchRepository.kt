@@ -36,7 +36,7 @@ class SearchRepository constructor(private val networkService: NetworkService) {
         paging: Int,
         page: Int
     ): TopHeadlinesResponse {
-        Log.v("testPaging", keyword + "  -- " + paging + "  --  " + page)
+        Log.v("testPaging", "$keyword  -- $paging  --  $page")
 
         return networkService.getSearchResult(
             keyword,
