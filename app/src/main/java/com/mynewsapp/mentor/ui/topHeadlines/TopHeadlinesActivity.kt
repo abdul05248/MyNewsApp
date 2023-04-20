@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mynewsapp.mentor.data.local.entities.TopHeadlines
 import com.mynewsapp.mentor.databinding.ActivityTopHeadlinesBinding
 import com.mynewsapp.mentor.di.component.ActivityComponent
@@ -34,6 +35,9 @@ class TopHeadlinesActivity :
     }
 
     override fun setUpUi() {
+
+        binding.recyclerView.layoutManager=
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         binding.recyclerView.adapter = adapter
 

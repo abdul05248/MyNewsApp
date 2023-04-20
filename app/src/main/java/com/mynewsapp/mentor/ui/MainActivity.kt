@@ -14,9 +14,12 @@ import com.mynewsapp.mentor.ui.search.SearchActivity
 import com.mynewsapp.mentor.ui.sources.NewsSourceActivity
 import com.mynewsapp.mentor.ui.topHeadlines.TopHeadlinesActivity
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 //Ask$ there is no viewmodel for this activity what should I pass?
 class MainActivity : BaseActivity<ActivityMainBinding,
@@ -26,6 +29,30 @@ class MainActivity : BaseActivity<ActivityMainBinding,
         super.onCreate(savedInstanceState)
 
         setListeners()
+
+        runBlocking { doSomething() }
+
+    }
+
+    private suspend fun doSomething() {
+
+        println(Thread.currentThread().name)
+
+        var job=GlobalScope.launch {
+
+            Log.d("someTests","some request")
+            Log.d("someTests",Thread.currentThread().name)
+
+            for (i in 1..5){
+                delay(1000)
+                Log.d("someTests",Thread.currentThread().name)
+                Log.d("someTests","waiting...${i}")
+            }
+        }
+
+
+        Log.d("someTests","before job")
+        Log.d("someTests","some request succeed")
 
     }
 

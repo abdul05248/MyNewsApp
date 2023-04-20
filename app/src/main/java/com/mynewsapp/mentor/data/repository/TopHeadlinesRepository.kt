@@ -31,7 +31,6 @@ class TopHeadlinesRepository constructor(
                 val topHeadlines = mutableListOf<TopHeadlines>()
 
                 for (apiTopHeadline in apiTopHeadlines) {
-
                     topHeadlines.add(apiTopHeadline.toTopHeadlines())
                 }
 
