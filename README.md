@@ -148,5 +148,11 @@ kaptAndroidTest "com.google.dagger:dagger-compiler:2.42"
 
 ```
 
+## Application Screenshots
+
+![Screenshot_2023-04-20-22-33-04-537_com mynewsapp mentor](https://user-images.githubusercontent.com/45284848/233468796-c575246d-00ea-45df-98a1-40d4c45892ec.jpg)
+![Screenshot_2023-04-20-22-30-49-355_com mynewsapp mentor](https://user-images.githubusercontent.com/45284848/233468800-0394d246-b5c0-4c3a-9ce6-7411a2157637.jpg)
+![Screenshot_2023-04-20-22-29-56-310_com mynewsapp mentor](https://user-images.githubusercontent.com/45284848/233468803-292fbb4b-b3bf-4d39-897c-a272efad62d2.jpg)
+![Screenshot_2023-04-20-22-29-43-533_com mynewsapp mentor](https://user-images.githubusercontent.com/45284848/233468805-0fd0533a-f8ac-4564-816f-18ddc9ad0552.jpg)
 
 
